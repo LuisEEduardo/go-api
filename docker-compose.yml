@@ -4,9 +4,14 @@ services:
   go-app:
     container_name: go-app
     image: go-api
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.debug
     ports:
       - "8000:8000"
+      - "2345:2345"
+    security_opt:
+      - "seccomp:unconfined"
     depends_on:
       - go_db
   go_db:

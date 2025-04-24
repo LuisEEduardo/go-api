@@ -1,0 +1,18 @@
+FROM golang:latest
+
+# Instalar Delve debugger
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+WORKDIR /go/src/app
+
+# Copiar o código fonte
+COPY . .
+
+# Expor as portas
+EXPOSE 8000 2345
+
+# Compilar a aplicação com informações de debug
+RUN go build -gcflags="all=-N -l" -o main cmd/main.go
+
+# Iniciar o debugger
+CMD ["dlv", "--listen=:2345", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "./main"] 
